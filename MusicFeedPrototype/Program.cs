@@ -11,17 +11,25 @@ namespace MusicFeedPrototype
     class Program
     {
         public static HttpClient httpClient = new HttpClient();
+        private static readonly string currentSongTextFilePath = @"C:/Streaming/CurrentSong.txt";
         static void Main(string[] args)
         {
+            UpdateFile("Music Feed Initializing --- ");
+            AppDomain.CurrentDomain.ProcessExit += new EventHandler(CurrentDomain_ProcessExit);
+
             Timer myTimer = new Timer(2000);
             myTimer.Elapsed += new ElapsedEventHandler(GetCurrentSongInfo);
             myTimer.AutoReset = true;
             myTimer.Enabled = true;
             Console.ReadLine();
         }
+        static void CurrentDomain_ProcessExit(object sender, EventArgs e)
+        {
+            UpdateFile("Music Feed Turned Off --- ");
+        }
         static void UpdateFile(string fileContents)
         {
-            File.WriteAllText(@"C:/Streaming/CurrentSong.txt", fileContents);
+            File.WriteAllText(currentSongTextFilePath, fileContents);
         }
         static void GetCurrentSongInfo(object source, ElapsedEventArgs e)
         {
